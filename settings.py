@@ -1,7 +1,7 @@
 #game options / settings
 
 #define displaysettings
-TITLE = "Merry Oh!"
+TITLE = "ClonedJump!"
 WIDTH = 480
 HEIGHT = 600
 FPS = 60
