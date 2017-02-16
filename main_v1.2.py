@@ -1,5 +1,4 @@
-#Merry Oh! - Platformer made in pygame
-#added player class and player movement
+#clonedjump - Platformer made in pygame for educational purposes
 
 import pygame as pg
 import random
