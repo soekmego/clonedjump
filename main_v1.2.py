@@ -131,7 +131,7 @@ class Game:
             with open(path.join(self.dir, HS_FILE), "w") as f:
                 f.write(str(self.score))
         else:
-            self.draw_text("High Score: " + str(self.score), 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
+            self.draw_text("High Score: " + str(self.highscore), 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
         pg.display.flip()
         self.wait_for_key()
         

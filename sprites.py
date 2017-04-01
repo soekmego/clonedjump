@@ -1,4 +1,4 @@
-#Sprite classes for Merry Oh
+#Sprite classes for clonedjump
 import pygame as pg
 from settings import *
 
