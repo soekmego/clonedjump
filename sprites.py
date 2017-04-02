@@ -73,10 +73,10 @@ class Player(pg.sprite.Sprite):
             self.vel.x = 0
         self.pos += self.vel + 0.5 * self.acc
         #wrap around the sides of the screen
-        if self.pos.x > WIDTH:
-            self.pos.x = 0
-        if self.pos.x < 0:
-            self.pos.x = WIDTH
+        if self.pos.x > WIDTH + self.rect.width / 2:
+            self.pos.x = 0 - self.rect.width / 2
+        if self.pos.x < 0 - self.rect.width / 2:
+            self.pos.x = WIDTH + self.rect.width / 2
 
         self.rect.midbottom = self.pos
 
@@ -109,8 +109,11 @@ class Player(pg.sprite.Sprite):
                 self.rect.bottom = bottom
 
 class Platform(pg.sprite.Sprite):
-    def __init__(self, x, y, w, h):
+    def __init__(self, game, x, y):
         pg.sprite.Sprite.__init__(self)
+        self.game = game
+        images = [self.game.spritesheet.get_image(0, 288, 380, 94),
+                self.game.spritesheet.get_image(213, 1662, 201, 100)]
         self.image = pg.Surface((w, h))
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
