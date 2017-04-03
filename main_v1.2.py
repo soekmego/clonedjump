@@ -47,16 +47,19 @@ class Game:
             p = Platform(self, *plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
+        pg.mixer.music.load(path.join(self.snd_dir, "Happy_Tune.ogg"))
         self.run()
 
     def run(self):
         #Game Loop
+        pg.mixer.music.play(loops=-1)
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
             self.events()
             self.update()
             self.draw()
+        pg.mixer.music.fadeout(500)
 
     def update(self):
         #game loop update
@@ -126,6 +129,8 @@ class Game:
 
     def show_start_screen(self):
         #splash screen
+        pg.mixer.music.load(path.join(self.snd_dir, "Yippee.ogg"))
+        pg.mixer.music.play(loops=-1)
         self.screen.fill(BGCOLOR)
         self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.draw_text("Arrows to move, Space to jump", 22, BLACK, WIDTH / 2, HEIGHT / 2)
@@ -133,11 +138,14 @@ class Game:
         self.draw_text("High Score: " + str(self.highscore), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
         self.wait_for_key()
+        pg.mixer.music.fadeout(500)
 
     def show_go_screen(self):
         #game over screen
         if not self.running:
             return
+        pg.mixer.music.load(path.join(self.snd_dir, "Yippee.ogg"))
+        pg.mixer.music.play(loops=-1)
         self.screen.fill(BGCOLOR)
         self.draw_text("GAME OVER", 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.draw_text("Score: " + str(self.score), 22, BLACK, WIDTH / 2, HEIGHT / 2)
@@ -151,6 +159,7 @@ class Game:
             self.draw_text("High Score: " + str(self.highscore), 22, BLACK, WIDTH / 2, HEIGHT / 2 + 40)
         pg.display.flip()
         self.wait_for_key()
+        pg.mixer.music.fadeout(500)
         
     def wait_for_key(self):
         # waiting for keypress between splash/game over and the game
