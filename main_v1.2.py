@@ -10,8 +10,9 @@ from os import path
 class Game:
     def __init__(self):
         #initialize game window, etc
-        pg.init()
+        pg.mixer.pre_init(44100, -16, 2, 2048)
         pg.mixer.init()
+        pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
@@ -31,6 +32,9 @@ class Game:
         # load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
         
+        # load sound
+        self.snd_dir = path.join(self.dir, "snd")
+        self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, "sfx_movement_jump1.wav"))
         
     def new(self):
         #start a new game and add all sprites to a group
@@ -40,7 +44,7 @@ class Game:
         self.player = Player(self)
         self.all_sprites.add(self.player)
         for plat in PLATFORM_LIST:
-            p = Platform(*plat)
+            p = Platform(self, *plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
         self.run()
@@ -61,14 +65,20 @@ class Game:
         if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
-                self.player.pos.y = hits[0].rect.top + 1
-                self.player.vel.y = 0
+                lowest = hits[0]
+                for hit in hits:
+                    if hit.rect.bottom > lowest.rect.bottom:
+                        lowest = hit
+                if self.player.pos.y < lowest.rect.centery:
+                    self.player.pos.y = lowest.rect.top
+                    self.player.vel.y = 0
+                    self.player.jumping = False
 
         #if player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:
-            self.player.pos.y += abs(self.player.vel.y)
+            self.player.pos.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
-                plat.rect.y += abs(self.player.vel.y)
+                plat.rect.y += max(abs(self.player.vel.y),2 )
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
@@ -85,9 +95,8 @@ class Game:
         #spawn new platforms to keep average number with randomized size and placement
         while len(self.platforms) < 6:
             width = random.randrange(50, 100)
-            p = Platform(random.randrange(0, WIDTH - width),
-                    random.randrange(-75, 30),
-                    width, 20)
+            p = Platform(self, random.randrange(0, WIDTH - width),
+                    random.randrange(-75, 30))
             self.platforms.add(p)
             self.all_sprites.add(p)
 
@@ -102,11 +111,15 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+            if event.type == pg.KEYUP:
+                if event.key == pg.K_SPACE:
+                    self.player.jump_cut()
 
     def draw(self):
         #game loop draw
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
+        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
         #After drawing everything, flip display
         pg.display.flip()
