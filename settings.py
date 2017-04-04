@@ -15,6 +15,10 @@ PLAYER_FRICTION = -0.12 #adjust friction to stop faster or slower
 PLAYER_GRAV = 0.8
 PLAYER_JUMP = 20
 
+# Game properties
+BOOST_POWER = 60
+POW_SPAWN_PCT = 10
+
 #starting platforms
 PLATFORM_LIST = [(0, HEIGHT - 60), 
 				(WIDTH / 2 - 50, HEIGHT * 3 / 4 - 50), 
