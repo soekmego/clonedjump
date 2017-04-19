@@ -133,7 +133,7 @@ class Game:
             self.playing = False
 
         #spawn new platforms to keep average number with randomized size and placement
-        while len(self.platforms) < 6:
+        while len(self.platforms) < 7:
             width = random.randrange(50, 100)
             Platform(self, random.randrange(0, WIDTH - width), random.randrange(-75, 30))
 
